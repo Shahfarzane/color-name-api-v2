@@ -117,11 +117,11 @@ export interface APIError {
 // Color list metadata
 export interface ColorListMeta {
   title: string;
-  description: string;
-  source: string;
+  description?: string;
+  source?: string;
   key: string;
-  colorCount: number;
-  license: string;
+  colorCount?: number;
+  license?: string;
   url?: string;
 }
 

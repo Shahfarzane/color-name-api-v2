@@ -8,7 +8,7 @@ import app, { initApp } from './app';
 import { initSocketService, shutdownSocketService } from './services';
 
 // Configuration
-const PORT = parseInt(process.env.PORT || '8080');
+const PORT = parseInt(process.env.PORT || '8080', 10);
 const SOCKET_ENABLED = process.env.SOCKET === 'true';
 
 /**
@@ -37,7 +37,7 @@ async function main(): Promise<void> {
     });
 
     const method = req.method || 'GET';
-    let body: BodyInit | null = null;
+    let body: Buffer | null = null;
 
     if (method !== 'GET' && method !== 'HEAD') {
       const chunks: Buffer[] = [];

@@ -18,6 +18,8 @@ const DEFAULT_ORIGINS = [
   'http://localhost:8080',
   'https://color.pizza',
   'https://color-pizza.vercel.app',
+  'https://gh-pages-puce.vercel.app',
+  'https://gh-pages-hey-nerd-ceo.vercel.app',
 ];
 
 /**
@@ -92,7 +94,7 @@ export function broadcastColorEvent(event: SocketColorEvent): void {
     list: event.list,
   });
 
-  io.emit('color', {
+  io.emit('colors', {
     ...record,
     request: event.request,
     timestamp: new Date().toISOString(),

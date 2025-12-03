@@ -7,6 +7,7 @@ import { Hono } from 'hono';
 import type { Context } from 'hono';
 import { FindColors, hydrateColor, getPaletteTitle, isExhaustionError } from '../lib/index';
 import type { RawColor, HydratedColor } from '../types';
+import { emitColorLookup, isSocketEnabled } from '../services/socketService';
 
 // Create router
 const colors = new Hono();
@@ -134,6 +135,15 @@ colors.get('/', async (c) => {
     hexColors.length === 1
       ? hydratedColors[0]?.name || 'Unknown'
       : getPaletteTitle(hydratedColors.map(color => color.name));
+
+  // Broadcast to connected Socket.IO clients
+  if (isSocketEnabled()) {
+    emitColorLookup(paletteTitle, hydratedColors, list, {
+      url: c.req.url,
+      method: c.req.method,
+      xReferrer: c.req.header('referer') || null,
+    });
+  }
 
   return c.json({
     paletteTitle,
