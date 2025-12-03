@@ -74,7 +74,7 @@ app.use(
   cors({
     origin: '*',
     allowMethods: ['GET', 'OPTIONS'],
-    allowHeaders: ['Content-Type', 'Authorization', 'X-API-Key'],
+    allowHeaders: ['Content-Type', 'Authorization', 'X-API-Key', 'X-Referrer'],
     maxAge: 86400, // 24 hours
   })
 );
