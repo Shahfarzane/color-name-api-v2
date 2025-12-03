@@ -38,10 +38,9 @@ function errorResponse(c: Context, status: number, message: string) {
 }
 
 /**
- * GET /v1/names/:query?
- * Search for colors by name
+ * Handle name search logic
  */
-names.get('/:query?', async (c) => {
+async function handleNameSearch(c: Context) {
   if (!findColors) {
     return errorResponse(c, 500, 'Color service not initialized');
   }
@@ -68,6 +67,18 @@ names.get('/:query?', async (c) => {
   return c.json({
     colors: results,
   });
-});
+}
+
+/**
+ * GET /v1/names/
+ * Search for colors by name using query param
+ */
+names.get('/', handleNameSearch);
+
+/**
+ * GET /v1/names/:query
+ * Search for colors by name using path param
+ */
+names.get('/:query', handleNameSearch);
 
 export default names;
