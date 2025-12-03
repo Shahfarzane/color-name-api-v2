@@ -11,14 +11,6 @@ import colorNameLists from "color-name-lists";
 import { FindColors } from "../lib/index";
 import type { ColorListMeta, RawColor } from "../types";
 
-/**
- * Color list with metadata
- */
-interface ColorListData {
-	colors: RawColor[];
-	meta?: ColorListMeta;
-}
-
 // Priority lists to load at startup (most commonly used)
 const PRIORITY_LISTS = ["default", "bestOf", "short"];
 
@@ -62,30 +54,30 @@ export async function initColorService(): Promise<void> {
 	colorListMeta = { ...colorNameLists.meta };
 
 	// Add metadata for built-in lists
-	colorListMeta["default"] = {
+	colorListMeta.default = {
 		title: "Default",
 		description: "Complete color name list with ~30,000 colors",
 		source: "color-name-list",
 		key: "default",
-		colorCount: colorLists["default"].length,
+		colorCount: colorLists.default.length,
 		license: "MIT",
 	};
 
-	colorListMeta["bestOf"] = {
+	colorListMeta.bestOf = {
 		title: "Best Of",
 		description: "Curated selection of ~1,500 memorable color names",
 		source: "color-name-list",
 		key: "bestOf",
-		colorCount: colorLists["bestOf"].length,
+		colorCount: colorLists.bestOf.length,
 		license: "MIT",
 	};
 
-	colorListMeta["short"] = {
+	colorListMeta.short = {
 		title: "Short Names",
 		description: "Colors with short names (< 10 characters)",
 		source: "color-name-list",
 		key: "short",
-		colorCount: colorLists["short"].length,
+		colorCount: colorLists.short.length,
 		license: "MIT",
 	};
 

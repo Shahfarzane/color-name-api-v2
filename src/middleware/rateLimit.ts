@@ -107,9 +107,11 @@ export function rateLimit(options: RateLimitOptions = {}): MiddlewareHandler {
 	const {
 		windowMs = parseInt(
 			process.env.RATE_LIMIT_WINDOW_MS || String(DEFAULT_WINDOW_MS),
+			10,
 		),
 		maxRequests = parseInt(
 			process.env.RATE_LIMIT_MAX_REQUESTS || String(DEFAULT_MAX_REQUESTS),
+			10,
 		),
 		enabled = process.env.RATE_LIMIT_ENABLED !== "false",
 		keyGenerator = getClientIP,
@@ -118,7 +120,7 @@ export function rateLimit(options: RateLimitOptions = {}): MiddlewareHandler {
 
 	return async (c: Context, next: Next) => {
 		// Skip if disabled or skip function returns true
-		if (!enabled || (skip && skip(c))) {
+		if (!enabled || skip?.(c)) {
 			await next();
 			return;
 		}

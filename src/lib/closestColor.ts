@@ -98,7 +98,8 @@ export default class Closest {
 
 		// Check cache for non-unique mode
 		if (!this.unique && this.cache.has(colorUID)) {
-			return this.cache.get(colorUID)!;
+			const cached = this.cache.get(colorUID);
+			if (cached) return cached;
 		}
 
 		// Check if all colors have been used in unique mode

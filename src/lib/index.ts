@@ -10,6 +10,6 @@ export { FindColors, hydrateColor, isExhaustionError } from "./findColors";
 // Utilities
 export { getPaletteTitle } from "./generatePaletteName";
 export type { ColorRecord, ParsedColorRecord } from "./utils";
-export { createColorRecord, hasOwnProperty, lib, luminance } from "./utils";
+export { createColorRecord, hasOwn, lib, luminance } from "./utils";
 // Core color search
 export { VPTree } from "./vptree";

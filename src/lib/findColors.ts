@@ -373,7 +373,7 @@ export class FindColors {
 					svg: `/v1/swatch/?color=${hex}`,
 				},
 				distance: parseFloat(
-					distanceMetric(parsed, parse(color.hex)!).toFixed(5),
+					distanceMetric(parsed, parse(color.hex) as Color).toFixed(5),
 				),
 			});
 		}

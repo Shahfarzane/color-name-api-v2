@@ -17,7 +17,7 @@ export function luminance(rgb: RGB): number {
 /**
  * Type-safe property check
  */
-export function hasOwnProperty<T extends object>(
+export function hasOwn<T extends object>(
 	obj: T,
 	prop: PropertyKey,
 ): prop is keyof T {

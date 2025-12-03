@@ -206,6 +206,47 @@ initializePixelatedMap({ pixelSize: 10 });
 // Initialize socket.io
 initializeSocket();
 
+// Demo mode: periodically fetch random colors to show activity
+// This simulates API traffic when the site doesn't have real users
+function startDemoColorFetching() {
+  const fetchRandomColors = async () => {
+    try {
+      // Generate 3-8 random colors
+      const numColors = Math.floor(Math.random() * 6) + 3;
+      const randomHexColors = [];
+      for (let i = 0; i < numColors; i++) {
+        randomHexColors.push(getRandomHexColor());
+      }
+      const colorsParam = randomHexColors.join(',');
+
+      // Fetch from our API - this will trigger Socket.IO broadcast
+      const response = await fetch(
+        `${window.CONFIG?.API_BASE_URL || 'https://color-name-api.fly.dev/v1/'}?values=${colorsParam}`
+      );
+      if (!response.ok) {
+        console.warn('[Demo] Failed to fetch random colors');
+      }
+    } catch (error) {
+      console.warn('[Demo] Error fetching random colors:', error.message);
+    }
+  };
+
+  // Fetch immediately, then every 5-15 seconds randomly
+  fetchRandomColors();
+
+  const scheduleNext = () => {
+    const delay = Math.floor(Math.random() * 10000) + 5000; // 5-15 seconds
+    setTimeout(() => {
+      fetchRandomColors();
+      scheduleNext();
+    }, delay);
+  };
+  scheduleNext();
+}
+
+// Start demo mode after a short delay
+setTimeout(startDemoColorFetching, 2000);
+
 // Color logic
 selectedColors.push(getRandomHexColor());
 renderColors(

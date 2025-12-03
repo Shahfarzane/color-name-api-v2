@@ -11,38 +11,40 @@
  * To use: npm install hono @hono/node-server
  */
 
-import { Hono } from 'hono';
-import { cors } from 'hono/cors';
-import { compress } from 'hono/compress';
 import { serve } from '@hono/node-server';
+import { Hono } from 'hono';
+import { compress } from 'hono/compress';
+import { cors } from 'hono/cors';
 import { LRUCache } from 'lru-cache';
-
+import { svgTemplate } from './colorSwatchSVG.js';
 import { FindColors, hydrateColor } from './findColors.js';
 import { getPaletteTitle } from './generatePaletteName.js';
-import { svgTemplate } from './colorSwatchSVG.js';
 
 // ============================================
 // Configuration
 // ============================================
 
 const config = {
-  port: parseInt(process.env.PORT || '8080'),
+  port: parseInt(process.env.PORT || '8080', 10),
   rateLimit: {
-    max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'),
-    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '60000'),
+    max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100', 10),
+    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '60000', 10),
   },
-  maxColorsPerRequest: parseInt(process.env.MAX_COLORS_PER_REQUEST || '170'),
+  maxColorsPerRequest: parseInt(
+    process.env.MAX_COLORS_PER_REQUEST || '170',
+    10
+  ),
 };
 
 // ============================================
 // Initialize Services
 // ============================================
 
-// Color lists and finder (same as current implementation)
-import colorNameLists from 'color-name-lists';
 import { colornames as colors } from 'color-name-list';
 import { colornames as colorsBestOf } from 'color-name-list/bestof';
 import { colornames as colorsShort } from 'color-name-list/short';
+// Color lists and finder (same as current implementation)
+import colorNameLists from 'color-name-lists';
 
 const colorsLists = {
   default: colors,
@@ -213,8 +215,8 @@ app.get('/v1/', async c => {
 // Color by hex in path (e.g., /v1/ff0000)
 app.get('/v1/:colors', async c => {
   const colors = c.req.param('colors');
-  const list = c.req.query('list') || 'default';
-  const noduplicates = c.req.query('noduplicates') === 'true';
+  const _list = c.req.query('list') || 'default';
+  const _noduplicates = c.req.query('noduplicates') === 'true';
 
   // Validate it looks like colors
   if (!/^[0-9a-f,]+$/i.test(colors)) {
@@ -236,7 +238,10 @@ app.get('/v1/:colors', async c => {
 app.get('/v1/names/:query?', async c => {
   const query = c.req.param('query') || c.req.query('name') || '';
   const list = c.req.query('list') || 'default';
-  const maxResults = Math.min(parseInt(c.req.query('maxResults') || '20'), 50);
+  const maxResults = Math.min(
+    parseInt(c.req.query('maxResults') || '20', 10),
+    50
+  );
 
   if (query.length < 3) {
     return c.json(

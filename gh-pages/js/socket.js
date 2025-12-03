@@ -18,6 +18,7 @@ export function initializeSocket() {
       console.log('Disconnected from Socket.io server')
     );
     socket.on('colors', msg => {
+      console.log('[Socket] Received colors event:', msg.paletteTitle, 'with', msg.colors?.length, 'colors');
       document.documentElement.style.setProperty(
         '--last-color',
         msg.colors[0].hex

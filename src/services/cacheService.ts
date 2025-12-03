@@ -16,15 +16,21 @@ const CACHE_CONFIGS = {
 
 type CacheType = keyof typeof CACHE_CONFIGS;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: Cache needs to store various types
 type CacheValue = any;
 
 // Cache instances
 const caches: Record<CacheType, LRUCache<string, CacheValue>> = {
 	gzip: new LRUCache<string, CacheValue>({ max: CACHE_CONFIGS.gzip.max }),
-	fullList: new LRUCache<string, CacheValue>({ max: CACHE_CONFIGS.fullList.max }),
-	colorName: new LRUCache<string, CacheValue>({ max: CACHE_CONFIGS.colorName.max }),
-	rateLimit: new LRUCache<string, CacheValue>({ max: CACHE_CONFIGS.rateLimit.max }),
+	fullList: new LRUCache<string, CacheValue>({
+		max: CACHE_CONFIGS.fullList.max,
+	}),
+	colorName: new LRUCache<string, CacheValue>({
+		max: CACHE_CONFIGS.colorName.max,
+	}),
+	rateLimit: new LRUCache<string, CacheValue>({
+		max: CACHE_CONFIGS.rateLimit.max,
+	}),
 	closest: new LRUCache<string, CacheValue>({ max: CACHE_CONFIGS.closest.max }),
 };
 
@@ -67,7 +73,9 @@ export function clearCache(type: CacheType): void {
  * Clear all caches
  */
 export function clearAllCaches(): void {
-	Object.values(caches).forEach((cache) => cache.clear());
+	for (const cache of Object.values(caches)) {
+		cache.clear();
+	}
 }
 
 /**
@@ -100,6 +108,8 @@ export function getTotalCacheSize(): number {
 /**
  * Get cache instance directly (for advanced usage)
  */
-export function getCacheInstance(type: CacheType): LRUCache<string, CacheValue> {
+export function getCacheInstance(
+	type: CacheType,
+): LRUCache<string, CacheValue> {
 	return caches[type];
 }

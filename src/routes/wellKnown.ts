@@ -3,7 +3,6 @@
  * Handles /.well-known/* endpoints
  */
 
-import type { Context } from "hono";
 import { Hono } from "hono";
 import { getOpenApiJSONObject } from "./docs";
 
@@ -34,7 +33,7 @@ wellKnown.get("/openapi.json", (c) => {
  * GET /.well-known/security.txt
  * Security contact information
  */
-wellKnown.get("/security.txt", (c) => {
+wellKnown.get("/security.txt", (_c) => {
 	const oneYearMs = 365 * 24 * 60 * 60 * 1000;
 	const expires = new Date(Date.now() + oneYearMs).toISOString();
 	const contactEmail = process.env.SECURITY_CONTACT || DEFAULT_CONTACT_EMAIL;

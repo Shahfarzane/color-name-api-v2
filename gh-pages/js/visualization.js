@@ -33,11 +33,10 @@ export function addColorsToVisualization(data) {
   url = url.replace(/%2C/g, ',');
   let countryCode = null;
 
-  if (
-    Object.prototype.hasOwnProperty.call(data.request, 'clientLocation') &&
-    Object.prototype.hasOwnProperty.call(data.request.clientLocation, 'country')
-  ) {
-    countryCode = data.request.clientLocation.country.toUpperCase();
+  // Check for clientLocation at root level first (new format), then in request (old format)
+  const clientLocation = data.clientLocation || data.request?.clientLocation;
+  if (clientLocation && clientLocation.country) {
+    countryCode = clientLocation.country.toUpperCase();
   }
   if (!document.getElementById('color-visualization')) {
     const visualizationContainer = document.createElement('div');

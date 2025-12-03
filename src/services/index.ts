@@ -25,6 +25,8 @@ export {
 	initColorService,
 	isInitialized,
 } from "./colorService";
+export type { ClientInfo, ClientLocation } from "./geoipService";
+export { getClientInfo, getClientIp, getClientLocation } from "./geoipService";
 export type { SocketConfig } from "./socketService";
 export {
 	broadcastColorEvent,

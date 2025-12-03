@@ -54,7 +54,7 @@ export function logger(options: LoggerOptions = {}): MiddlewareHandler {
 
 	return async (c: Context, next: Next) => {
 		// Skip if disabled or skip function returns true
-		if (!enabled || (skip && skip(c))) {
+		if (!enabled || skip?.(c)) {
 			await next();
 			return;
 		}

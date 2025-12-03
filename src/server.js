@@ -1,22 +1,21 @@
-import http from 'http';
-import zlib from 'zlib';
-import { promisify } from 'util';
-import fs from 'fs/promises';
-import colorNameLists from 'color-name-lists';
+import fs from 'node:fs/promises';
+import http from 'node:http';
+import { promisify } from 'node:util';
+import zlib from 'node:zlib';
 import { colornames as colors } from 'color-name-list';
 import { colornames as colorsBestOf } from 'color-name-list/bestof';
 import { colornames as colorsShort } from 'color-name-list/short';
-import { Server } from 'socket.io';
-import requestIp from 'request-ip';
-import { lookup } from 'ip-location-api';
+import colorNameLists from 'color-name-lists';
 import * as dotenv from 'dotenv';
+import { lookup } from 'ip-location-api';
 import { LRUCache } from 'lru-cache'; // Import LRUCache
-
+import requestIp from 'request-ip';
+import { Server } from 'socket.io';
+import { svgTemplate } from './colorSwatchSVG.js';
+import { addResponseToTable, initDatabase } from './database.js';
 import { FindColors, hydrateColor } from './findColors.js';
 import { getPaletteTitle } from './generatePaletteName.js';
-import { svgTemplate } from './colorSwatchSVG.js';
 import { createColorRecord } from './lib.js';
-import { initDatabase, addResponseToTable } from './database.js';
 import { initWellKnown } from './wellKnown.js';
 
 dotenv.config();
@@ -28,9 +27,7 @@ const socket = process.env.SOCKET || false;
 const maxColorsPerRequest =
   parseInt(process.env.MAX_COLORS_PER_REQUEST, 10) || 170;
 const allowedSocketOrigins =
-  (process.env.ALLOWED_SOCKET_ORIGINS &&
-    process.env.ALLOWED_SOCKET_ORIGINS.split(',')) ||
-  `http://localhost:${port}`;
+  process.env.ALLOWED_SOCKET_ORIGINS?.split(',') || `http://localhost:${port}`;
 const currentVersion = 'v1';
 const urlNameSubpath = 'names';
 const APIurl = ''; // subfolder for the API
@@ -42,8 +39,10 @@ const ipCacheSize = 1000; // Cache size for IP lookup results
 const fullListCacheSize = 20; // Max number of full list responses to cache
 
 // Rate limiting configuration
-const rateLimitWindowMs = parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 60000; // 1 minute window
-const rateLimitMaxRequests = parseInt(process.env.RATE_LIMIT_MAX_REQUESTS, 10) || 100; // 100 requests per window
+const rateLimitWindowMs =
+  parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 60000; // 1 minute window
+const rateLimitMaxRequests =
+  parseInt(process.env.RATE_LIMIT_MAX_REQUESTS, 10) || 100; // 100 requests per window
 const rateLimitEnabled = process.env.RATE_LIMIT_ENABLED !== 'false'; // enabled by default
 
 // Declare variables for async loading
@@ -638,8 +637,8 @@ const respondValueSearch = async (
 
 const respondLists = async (
   searchParams,
-  requestUrl,
-  request,
+  _requestUrl,
+  _request,
   response,
   responseHeader
 ) => {
@@ -672,9 +671,9 @@ const routes = [
   {
     path: '/docs/',
     handler: async (
-      searchParams,
-      requestUrl,
-      request,
+      _searchParams,
+      _requestUrl,
+      _request,
       response,
       responseHeader
     ) =>
@@ -689,13 +688,13 @@ const routes = [
   {
     path: '/openapi.yaml',
     handler: async (
-      searchParams,
-      requestUrl,
-      request,
+      _searchParams,
+      _requestUrl,
+      _request,
       response,
       responseHeader
     ) => {
-      const yml = getOpenApiYAMLString && getOpenApiYAMLString();
+      const yml = getOpenApiYAMLString?.();
       if (!yml) {
         return await sendError(
           response,
@@ -719,13 +718,13 @@ const routes = [
   {
     path: '/openapi.json',
     handler: async (
-      searchParams,
-      requestUrl,
-      request,
+      _searchParams,
+      _requestUrl,
+      _request,
       response,
       responseHeader
     ) => {
-      const json = getOpenApiJSONObject && getOpenApiJSONObject();
+      const json = getOpenApiJSONObject?.();
       if (!json) {
         return await sendError(
           response,
@@ -749,8 +748,8 @@ const routes = [
     path: '/swatch/',
     handler: async (
       searchParams,
-      requestUrl,
-      request,
+      _requestUrl,
+      _request,
       response,
       responseHeader
     ) => {
