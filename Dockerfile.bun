@@ -29,6 +29,12 @@ COPY --from=builder /app/tsconfig.json ./
 COPY --from=builder /app/color-names-v1-OpenAPI.yml ./
 COPY --from=builder /app/package.json ./
 
+# Ensure ip-location-api can create its tmp/data directories at runtime
+# This is required for GeoIP database downloads and lookups
+RUN mkdir -p /app/node_modules/ip-location-api/tmp \
+    /app/node_modules/ip-location-api/data \
+    && chmod -R 777 /app/node_modules/ip-location-api
+
 # Set environment
 ENV NODE_ENV=production
 ENV PORT=8080

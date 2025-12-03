@@ -1,10 +1,10 @@
 /**
  * GeoIP Service - Client location lookup
  * Uses ip-location-api for IP geolocation
+ * NOTE: The lookup is lazy-loaded to avoid blocking server startup
  */
 
 import type { Context } from "hono";
-import { lookup } from "ip-location-api";
 import { getFromCache, setInCache } from "./cacheService";
 
 export interface ClientLocation {
@@ -18,6 +18,45 @@ export interface ClientInfo {
 	clientIp: string | null;
 	clientLocation: ClientLocation | null;
 }
+
+// Lazy-loaded lookup function
+let lookupFn: ((ip: string) => unknown) | null = null;
+let initPromise: Promise<void> | null = null;
+let initFailed = false;
+
+/**
+ * Initialize the GeoIP lookup function lazily
+ * This prevents blocking server startup
+ */
+async function initLookup(): Promise<void> {
+	if (lookupFn !== null || initFailed) return;
+
+	if (initPromise) {
+		await initPromise;
+		return;
+	}
+
+	initPromise = (async () => {
+		try {
+			console.log("[GeoIP] Loading ip-location-api module...");
+			const module = await import("ip-location-api");
+			lookupFn = module.lookup;
+			console.log("[GeoIP] ip-location-api loaded successfully");
+		} catch (error) {
+			console.error("[GeoIP] Failed to load ip-location-api:", error);
+			initFailed = true;
+		}
+	})();
+
+	await initPromise;
+}
+
+// Start loading in the background (non-blocking)
+setTimeout(() => {
+	initLookup().catch((err) =>
+		console.error("[GeoIP] Background init failed:", err),
+	);
+}, 100);
 
 /**
  * Get client IP from Hono context
@@ -51,7 +90,15 @@ export function getClientIp(c: Context): string | null {
  * Results are cached to avoid repeated lookups
  */
 export function getClientLocation(ip: string): ClientLocation | null {
-	if (!ip) return null;
+	if (!ip) {
+		return null;
+	}
+
+	// If GeoIP isn't ready yet, return null (non-blocking)
+	if (!lookupFn) {
+		console.log("[GeoIP] Lookup not ready yet, skipping");
+		return null;
+	}
 
 	// Check cache first
 	const cached = getFromCache<ClientLocation>("rateLimit", `geo:${ip}`);
@@ -60,7 +107,12 @@ export function getClientLocation(ip: string): ClientLocation | null {
 	}
 
 	try {
-		const location = lookup(ip);
+		const location = lookupFn(ip) as {
+			country?: string;
+			region?: string;
+			city?: string;
+			ll?: [number, number];
+		} | null;
 		if (location) {
 			const clientLocation: ClientLocation = {
 				country: location.country,
@@ -73,7 +125,7 @@ export function getClientLocation(ip: string): ClientLocation | null {
 			return clientLocation;
 		}
 	} catch (error) {
-		console.warn(`[GeoIP] Failed to lookup IP ${ip}:`, error);
+		console.error(`[GeoIP] Failed to lookup IP ${ip}:`, error);
 	}
 
 	// Cache null result to avoid repeated failed lookups

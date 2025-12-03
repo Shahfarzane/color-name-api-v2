@@ -219,17 +219,23 @@ function startDemoColorFetching() {
       }
       const colorsParam = randomHexColors.join(',');
 
+      console.log('%c[DEMO MODE] Fetching random colors:', 'background: #ff6b6b; color: white; padding: 2px 6px; border-radius: 3px;', colorsParam);
+
       // Fetch from our API - this will trigger Socket.IO broadcast
       const response = await fetch(
         `${window.CONFIG?.API_BASE_URL || 'https://color-name-api.fly.dev/v1/'}?values=${colorsParam}`
       );
       if (!response.ok) {
         console.warn('[Demo] Failed to fetch random colors');
+      } else {
+        console.log('%c[DEMO MODE] Fetch successful - Socket.IO will broadcast this to all clients', 'background: #ff6b6b; color: white; padding: 2px 6px; border-radius: 3px;');
       }
     } catch (error) {
       console.warn('[Demo] Error fetching random colors:', error.message);
     }
   };
+
+  console.log('%c[DEMO MODE] Starting demo color fetching (every 5-15 seconds)', 'background: #ff6b6b; color: white; padding: 2px 6px; border-radius: 3px; font-weight: bold;');
 
   // Fetch immediately, then every 5-15 seconds randomly
   fetchRandomColors();
@@ -244,8 +250,8 @@ function startDemoColorFetching() {
   scheduleNext();
 }
 
-// Start demo mode after a short delay
-setTimeout(startDemoColorFetching, 2000);
+// Demo mode disabled - uncomment to enable fake traffic for testing
+// setTimeout(startDemoColorFetching, 2000);
 
 // Color logic
 selectedColors.push(getRandomHexColor());

@@ -20,6 +20,51 @@ const DEFAULT_ORIGINS = [
 ];
 
 /**
+ * Check if an origin matches a pattern (supports wildcards like *.vercel.app)
+ */
+function originMatchesPattern(origin: string, pattern: string): boolean {
+	if (pattern === "*") return true;
+	if (pattern === origin) return true;
+
+	// Handle wildcard patterns like https://*.vercel.app
+	if (pattern.includes("*")) {
+		const regexPattern = pattern
+			.replace(/[.+?^${}()|[\]\\]/g, "\\$&") // Escape regex special chars except *
+			.replace(/\*/g, ".*"); // Replace * with .*
+		const regex = new RegExp(`^${regexPattern}$`);
+		return regex.test(origin);
+	}
+
+	return false;
+}
+
+/**
+ * Create CORS origin validator function
+ */
+function createOriginValidator(
+	allowedOrigins: string[],
+): (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => void {
+	return (origin, callback) => {
+		// Allow requests with no origin (e.g., same-origin, curl, etc.)
+		if (!origin) {
+			callback(null, true);
+			return;
+		}
+
+		const isAllowed = allowedOrigins.some((pattern) =>
+			originMatchesPattern(origin, pattern),
+		);
+
+		if (isAllowed) {
+			callback(null, true);
+		} else {
+			console.warn(`[SocketService] Blocked origin: ${origin}`);
+			callback(new Error("Not allowed by CORS"), false);
+		}
+	};
+}
+
+/**
  * Socket service configuration
  */
 export interface SocketConfig {
@@ -50,7 +95,7 @@ export function initSocketService(
 
 	io = new SocketServer(httpServer, {
 		cors: {
-			origin: origins,
+			origin: createOriginValidator(origins),
 			methods: ["GET", "POST"],
 			credentials: true,
 		},
@@ -91,7 +136,7 @@ export function broadcastColorEvent(event: SocketColorEvent): void {
 	// Extract clientLocation from request for easy frontend access
 	const clientLocation = event.request?.clientLocation || null;
 
-	io.emit("colors", {
+	const payload = {
 		paletteTitle: event.paletteTitle,
 		colors: event.colors.slice(0, 50).map((c) => ({
 			name: c.name,
@@ -102,7 +147,15 @@ export function broadcastColorEvent(event: SocketColorEvent): void {
 		request: event.request,
 		clientLocation,
 		timestamp: new Date().toISOString(),
-	});
+	};
+
+	console.log(
+		`[SocketService] Broadcasting colors: ${event.paletteTitle}, country: ${
+			(clientLocation as { country?: string })?.country || "unknown"
+		}, clients: ${getConnectedClientCount()}`,
+	);
+
+	io.emit("colors", payload);
 }
 
 /**

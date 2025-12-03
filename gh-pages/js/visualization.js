@@ -20,7 +20,7 @@ entryTpl.innerHTML = `
 
 export function addColorsToVisualization(data) {
   const { paletteTitle, colors } = data;
-  let url = data.request.url;
+  let url = data.request?.url || '';
   if (url && !url.startsWith('http')) {
     if (!url.includes('/v1/') && !url.startsWith('/v1/')) {
       url = url.startsWith('/') ? url.substring(1) : url;
@@ -35,8 +35,20 @@ export function addColorsToVisualization(data) {
 
   // Check for clientLocation at root level first (new format), then in request (old format)
   const clientLocation = data.clientLocation || data.request?.clientLocation;
+
+  // Debug logging
+  console.log('[Visualization] Received data:', {
+    paletteTitle,
+    clientLocation,
+    requestClientLocation: data.request?.clientLocation,
+    rootClientLocation: data.clientLocation,
+  });
+
   if (clientLocation && clientLocation.country) {
     countryCode = clientLocation.country.toUpperCase();
+    console.log('[Visualization] Country code:', countryCode);
+  } else {
+    console.warn('[Visualization] No country code found in data');
   }
   if (!document.getElementById('color-visualization')) {
     const visualizationContainer = document.createElement('div');
