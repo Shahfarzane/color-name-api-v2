@@ -1,7 +1,9 @@
 // API and list-fetching logic
 import { elements } from './elements.js';
+import { API_BASE_URL } from './config.js';
 
-export const API_BASE_URL = 'https://api.color.pizza/v1/';
+// Re-export for backwards compatibility
+export { API_BASE_URL };
 
 export async function fetchLists(populateListDropdown) {
   try {

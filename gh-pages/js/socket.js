@@ -2,13 +2,14 @@
 import { createColorObjectsFromData } from './physics.js';
 import { addColorsToVisualization } from './visualization.js'; // We'll modularize this next
 import { generateFavicon } from './favicon.js';
+import { SOCKET_URL } from './config.js';
 
 let socket = null;
 let isPageVisible = true;
 
 export function initializeSocket() {
   try {
-    socket = window.io('https://api.color.pizza', {
+    socket = window.io(SOCKET_URL, {
       transports: ['websocket'],
       reconnectionAttempts: 5,
     });

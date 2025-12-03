@@ -1,0 +1,73 @@
+/**
+ * Color name search routes
+ * Handles /v1/names/ endpoint
+ */
+
+import { Hono } from 'hono';
+import type { Context } from 'hono';
+import { FindColors } from '../lib/index';
+
+// Create router
+const names = new Hono();
+
+// Will be initialized by colorService
+let findColors: FindColors | null = null;
+let availableLists: string[] = [];
+
+/**
+ * Initialize names route with color data
+ */
+export function initNamesRoute(finder: FindColors, listNames: string[]): void {
+  findColors = finder;
+  availableLists = listNames;
+}
+
+/**
+ * Create error response
+ */
+function errorResponse(c: Context, status: number, message: string) {
+  return c.json(
+    {
+      error: {
+        status,
+        message,
+      },
+    },
+    status as 400 | 500
+  );
+}
+
+/**
+ * GET /v1/names/:query?
+ * Search for colors by name
+ */
+names.get('/:query?', async (c) => {
+  if (!findColors) {
+    return errorResponse(c, 500, 'Color service not initialized');
+  }
+
+  // Get query from path param or query string
+  const query = c.req.param('query') || c.req.query('name') || '';
+  const list = c.req.query('list') || 'default';
+  const maxResultsParam = c.req.query('maxResults');
+  const maxResults = Math.min(parseInt(maxResultsParam || '20'), 50);
+
+  // Validate list
+  if (!availableLists.includes(list)) {
+    return errorResponse(c, 400, `Invalid list. Available: ${availableLists.join(', ')}`);
+  }
+
+  // Validate query length
+  if (query.length < 3) {
+    return errorResponse(c, 400, 'Search query must be at least 3 characters');
+  }
+
+  // Search for matching color names
+  const results = findColors.searchNames(query, list, maxResults);
+
+  return c.json({
+    colors: results,
+  });
+});
+
+export default names;
