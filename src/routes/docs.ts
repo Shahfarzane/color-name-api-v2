@@ -44,6 +44,29 @@ export function getOpenApiYAMLString(): string | null {
 }
 
 /**
+ * GET /
+ * Root endpoint - API info
+ */
+docs.get('/', (c) => {
+  return c.json({
+    name: 'Color Name API',
+    version: '1.0.0',
+    description: 'API for getting human-friendly names for hex colors',
+    endpoints: {
+      colors: '/v1/?values=ff0000,00ff00',
+      colorsByPath: '/v1/ff0000,00ff00',
+      names: '/v1/names/:query',
+      lists: '/v1/lists/',
+      swatch: '/v1/swatch/?color=ff0000&name=Red',
+      docs: '/v1/docs/',
+      health: '/health',
+    },
+    documentation: '/openapi.yaml',
+    source: 'https://github.com/meodai/color-name-api',
+  });
+});
+
+/**
  * GET /health
  * Health check endpoint
  */
