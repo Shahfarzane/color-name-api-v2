@@ -34,7 +34,7 @@ async function updateFirewallConfig(rulesetId, config) {
   const response = await fetch(url.toString(), {
     method: 'PATCH',
     headers: {
-      'Authorization': `Bearer ${VERCEL_TOKEN}`,
+      Authorization: `Bearer ${VERCEL_TOKEN}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -46,7 +46,9 @@ async function updateFirewallConfig(rulesetId, config) {
 
   if (!response.ok) {
     const error = await response.text();
-    throw new Error(`Failed to update ${rulesetId}: ${response.status} - ${error}`);
+    throw new Error(
+      `Failed to update ${rulesetId}: ${response.status} - ${error}`
+    );
   }
 
   return response.json();
@@ -82,8 +84,9 @@ async function enableBotProtection() {
 
     console.log('🎉 All bot protection rules enabled successfully!');
     console.log('\nView your firewall settings at:');
-    console.log(`   https://vercel.com/${VERCEL_TEAM_ID || 'dashboard'}/${VERCEL_PROJECT_ID}/settings/security`);
-
+    console.log(
+      `   https://vercel.com/${VERCEL_TEAM_ID || 'dashboard'}/${VERCEL_PROJECT_ID}/settings/security`
+    );
   } catch (error) {
     console.error('❌ Error:', error.message);
     process.exit(1);
