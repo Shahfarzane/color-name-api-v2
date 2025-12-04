@@ -1,6 +1,7 @@
 // API and list-fetching logic
-import { elements } from './elements.js';
+
 import { API_BASE_URL } from './config.js';
+import { elements } from './elements.js';
 
 // Re-export for backwards compatibility
 export { API_BASE_URL };

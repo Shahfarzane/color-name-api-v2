@@ -1,13 +1,10 @@
 // Main entry point for the app
-import { elements } from './elements.js';
-import { getRandomHexColor, renderColors } from './colors.js';
+
 import { fetchLists, populateListDropdown } from './api.js';
-import {
-  initializeUrlInteractiveElements,
-  updateApiUrlPreview,
-  fetchColorNames,
-} from './url.js';
-import { setupCountryMaps, initializePixelatedMap } from './map.js';
+import { getRandomHexColor, renderColors } from './colors.js';
+import { elements } from './elements.js';
+import { generateFavicon } from './favicon.js';
+import { initializePixelatedMap, setupCountryMaps } from './map.js';
 import {
   initializePhysics,
   physics,
@@ -16,7 +13,11 @@ import {
   updateToggleButton,
 } from './physics.js';
 import { initializeSocket, setPageVisibility } from './socket.js';
-import { generateFavicon } from './favicon.js';
+import {
+  fetchColorNames,
+  initializeUrlInteractiveElements,
+  updateApiUrlPreview,
+} from './url.js';
 
 elements.splitText.forEach(element => {
   const text = element.textContent;
@@ -219,7 +220,11 @@ function startDemoColorFetching() {
       }
       const colorsParam = randomHexColors.join(',');
 
-      console.log('%c[DEMO MODE] Fetching random colors:', 'background: #ff6b6b; color: white; padding: 2px 6px; border-radius: 3px;', colorsParam);
+      console.log(
+        '%c[DEMO MODE] Fetching random colors:',
+        'background: #ff6b6b; color: white; padding: 2px 6px; border-radius: 3px;',
+        colorsParam
+      );
 
       // Fetch from our API - this will trigger Socket.IO broadcast
       const response = await fetch(
@@ -228,14 +233,20 @@ function startDemoColorFetching() {
       if (!response.ok) {
         console.warn('[Demo] Failed to fetch random colors');
       } else {
-        console.log('%c[DEMO MODE] Fetch successful - Socket.IO will broadcast this to all clients', 'background: #ff6b6b; color: white; padding: 2px 6px; border-radius: 3px;');
+        console.log(
+          '%c[DEMO MODE] Fetch successful - Socket.IO will broadcast this to all clients',
+          'background: #ff6b6b; color: white; padding: 2px 6px; border-radius: 3px;'
+        );
       }
     } catch (error) {
       console.warn('[Demo] Error fetching random colors:', error.message);
     }
   };
 
-  console.log('%c[DEMO MODE] Starting demo color fetching (every 5-15 seconds)', 'background: #ff6b6b; color: white; padding: 2px 6px; border-radius: 3px; font-weight: bold;');
+  console.log(
+    '%c[DEMO MODE] Starting demo color fetching (every 5-15 seconds)',
+    'background: #ff6b6b; color: white; padding: 2px 6px; border-radius: 3px; font-weight: bold;'
+  );
 
   // Fetch immediately, then every 5-15 seconds randomly
   fetchRandomColors();

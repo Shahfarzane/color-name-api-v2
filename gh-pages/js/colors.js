@@ -8,7 +8,7 @@ export function getRandomHexColor() {
 }
 
 export function getColorValue(colorObj) {
-  return Object.prototype.hasOwnProperty.call(colorObj, 'requestedHex')
+  return Object.hasOwn(colorObj, 'requestedHex')
     ? colorObj.requestedHex
     : colorObj.hex;
 }

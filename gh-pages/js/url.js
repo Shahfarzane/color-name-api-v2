@@ -1,6 +1,7 @@
 // URL interactive elements and color name fetching logic
-import { elements } from './elements.js';
+
 import { API_BASE_URL } from './api.js';
+import { elements } from './elements.js';
 
 export function initializeUrlInteractiveElements(
   availableLists,

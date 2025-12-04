@@ -1,5 +1,5 @@
-import { elements } from './elements.js';
 import { getRandomHexColor } from './colors.js';
+import { elements } from './elements.js';
 
 const intialColor = `#${getRandomHexColor()}`;
 

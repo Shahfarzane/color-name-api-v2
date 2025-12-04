@@ -1,8 +1,9 @@
 // Socket.io logic for real-time color updates
+
+import { SOCKET_URL } from './config.js';
+import { generateFavicon } from './favicon.js';
 import { createColorObjectsFromData } from './physics.js';
 import { addColorsToVisualization } from './visualization.js'; // We'll modularize this next
-import { generateFavicon } from './favicon.js';
-import { SOCKET_URL } from './config.js';
 
 let socket = null;
 let isPageVisible = true;
@@ -18,15 +19,22 @@ export function initializeSocket() {
       console.log('Disconnected from Socket.io server')
     );
     socket.on('colors', msg => {
-      const country = msg.clientLocation?.country || msg.request?.clientLocation?.country || 'unknown';
+      const country =
+        msg.clientLocation?.country ||
+        msg.request?.clientLocation?.country ||
+        'unknown';
       const url = msg.request?.url || 'unknown';
       console.log(
         '%c[SOCKET.IO] Received broadcast',
         'background: #4ecdc4; color: white; padding: 2px 6px; border-radius: 3px;',
-        '\n  Title:', msg.paletteTitle,
-        '\n  Colors:', msg.colors?.length,
-        '\n  Country:', country,
-        '\n  Request URL:', url
+        '\n  Title:',
+        msg.paletteTitle,
+        '\n  Colors:',
+        msg.colors?.length,
+        '\n  Country:',
+        country,
+        '\n  Request URL:',
+        url
       );
       document.documentElement.style.setProperty(
         '--last-color',

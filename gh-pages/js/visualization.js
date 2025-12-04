@@ -1,8 +1,9 @@
 // Visualization logic for color requests
+
+import { colorArrToSteppedGradient, getColorValue } from './colors.js';
+import { API_BASE_URL } from './config.js';
 import { elements } from './elements.js';
 import { highlightMapCountry } from './map.js';
-import { getColorValue, colorArrToSteppedGradient } from './colors.js';
-import { API_BASE_URL } from './config.js';
 
 const MAX_COLORS_DISPLAY = 50;
 const MAX_COLOR_ITEMS = 1;
