@@ -1,10 +1,10 @@
-name: Deploy og-version to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches: [main]
     paths:
-      - 'og-version/gh-pages/**'
+      - 'gh-pages/**'
   workflow_dispatch:
 
 permissions:
@@ -32,7 +32,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'og-version/gh-pages'
+          path: 'gh-pages'
 
       - name: Deploy to GitHub Pages
         id: deployment
