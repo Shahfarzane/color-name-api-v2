@@ -13,7 +13,7 @@ primary_region = 'sjc'
   SOCKET = "true"
   # Allow Socket.IO connections from these origins (comma-separated)
   # Update this to include your Vercel frontend URL
-  ALLOWED_SOCKET_ORIGINS = "https://color.pizza,https://gh-pages-puce.vercel.app,https://*.vercel.app"
+  ALLOWED_SOCKET_ORIGINS = "https://color.pizza,https://gh-pages-puce.vercel.app,https://*.vercel.app,https://shahfarzane.github.io"
   RATE_LIMIT_ENABLED = "true"
   RATE_LIMIT_MAX_REQUESTS = "100"
   RATE_LIMIT_WINDOW_MS = "60000"
