@@ -1,4 +1,4 @@
-import { hasOwnProperty } from "../src/lib.js";
+import { hasOwnProperty as hasOwn } from "../src/lib.js";
 
 const localhost = "127.0.0.1"; // not localhost, because of the fetch() call fails in node otherwise
 const port = process.env.PORT || 8080;
@@ -10,10 +10,10 @@ function colorResponseBasicTest(response) {
 	if (typeof response !== "object") {
 		throw new Error("response is not an object");
 	}
-	if (hasOwnProperty(response, "paletteTitle") === false) {
+	if (hasOwn(response, "paletteTitle") === false) {
 		throw new Error("response does not have property paletteTitle");
 	}
-	if (hasOwnProperty(response, "colors") === false) {
+	if (hasOwn(response, "colors") === false) {
 		throw new Error("response does not return any colors");
 	}
 	if (response.colors.length === 0) {
@@ -22,38 +22,29 @@ function colorResponseBasicTest(response) {
 }
 
 function colorObjectTest(colorObj) {
-	if (hasOwnProperty(colorObj, "hex") === false) {
+	if (hasOwn(colorObj, "hex") === false) {
 		throw new Error("color object does not have property hex");
 	}
-	if (hasOwnProperty(colorObj, "name") === false) {
+	if (hasOwn(colorObj, "name") === false) {
 		throw new Error("color object does not have property name");
 	}
-	if (
-		hasOwnProperty(colorObj, "rgb") === false &&
-		typeof colorObj.rgb !== "object"
-	) {
+	if (hasOwn(colorObj, "rgb") === false && typeof colorObj.rgb !== "object") {
 		throw new Error("color object does not have property rbg");
 	}
-	if (
-		hasOwnProperty(colorObj, "hsl") === false &&
-		typeof colorObj.hsl !== "object"
-	) {
+	if (hasOwn(colorObj, "hsl") === false && typeof colorObj.hsl !== "object") {
 		throw new Error("color object does not have property hsl");
 	}
-	if (
-		hasOwnProperty(colorObj, "lab") === false &&
-		typeof colorObj.lab !== "object"
-	) {
+	if (hasOwn(colorObj, "lab") === false && typeof colorObj.lab !== "object") {
 		throw new Error("color object does not have property lab");
 	}
-	if (hasOwnProperty(colorObj, "luminance") === false) {
+	if (hasOwn(colorObj, "luminance") === false) {
 		throw new Error("color object does not have property luminance");
 	}
-	if (hasOwnProperty(colorObj, "luminanceWCAG") === false) {
+	if (hasOwn(colorObj, "luminanceWCAG") === false) {
 		throw new Error("color object does not have property luminanceWCAG");
 	}
 	if (
-		hasOwnProperty(colorObj, "swatchImg") === false &&
+		hasOwn(colorObj, "swatchImg") === false &&
 		typeof colorObj.swatchImg !== "object"
 	) {
 		throw new Error("color object does not have property swatchImg");
@@ -61,13 +52,13 @@ function colorObjectTest(colorObj) {
 }
 
 function errorResponseTest(responseObj) {
-	if (hasOwnProperty(responseObj, "error") === false) {
+	if (hasOwn(responseObj, "error") === false) {
 		throw new Error("response does not have error property");
 	}
-	if (hasOwnProperty(responseObj.error, "message") === false) {
+	if (hasOwn(responseObj.error, "message") === false) {
 		throw new Error("error response does not have message property");
 	}
-	if (hasOwnProperty(responseObj.error, "status") === false) {
+	if (hasOwn(responseObj.error, "status") === false) {
 		throw new Error("error response does not have status property");
 	}
 }
@@ -144,13 +135,13 @@ const routesToTest = {
 			errorResponseTest(response);
 
 			// Check for specific error properties in the exhausted colors case
-			if (!hasOwnProperty(response.error, "availableCount")) {
+			if (!hasOwn(response.error, "availableCount")) {
 				throw new Error("Error response missing availableCount property");
 			}
-			if (!hasOwnProperty(response.error, "totalCount")) {
+			if (!hasOwn(response.error, "totalCount")) {
 				throw new Error("Error response missing totalCount property");
 			}
-			if (!hasOwnProperty(response.error, "requestedCount")) {
+			if (!hasOwn(response.error, "requestedCount")) {
 				throw new Error("Error response missing requestedCount property");
 			}
 
@@ -224,7 +215,7 @@ const routesToTest = {
 		if (typeof response !== "object") {
 			throw new Error("response is not an object");
 		}
-		if (hasOwnProperty(response, "availableColorNameLists") === false) {
+		if (hasOwn(response, "availableColorNameLists") === false) {
 			throw new Error(
 				"response does not have property availableColorNameLists",
 			);
@@ -232,7 +223,7 @@ const routesToTest = {
 		if (response.availableColorNameLists.length === 0) {
 			throw new Error("response does not return any color name list keys");
 		}
-		if (hasOwnProperty(response, "listDescriptions") === false) {
+		if (hasOwn(response, "listDescriptions") === false) {
 			throw new Error("response does not have property listDescriptions");
 		}
 		if (

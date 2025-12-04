@@ -190,7 +190,7 @@ async function fetchLiveApiColor(
 		}
 
 		const data = (await response.json()) as { colors?: HydratedColor[] };
-		return data.colors && data.colors.length ? data.colors[0] : null;
+		return data.colors?.length ? data.colors[0] : null;
 	} catch (err) {
 		console.error(`Error fetching from live API for color ${hexColor}:`, err);
 		return null;
@@ -252,7 +252,7 @@ function getLocalColor(
 			false,
 			validListType,
 		);
-		if (result && result.length && !("error" in result[0])) {
+		if (result?.length && !("error" in result[0])) {
 			return result[0] as HydratedColor;
 		}
 		return null;

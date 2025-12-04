@@ -1,5 +1,5 @@
 // Basic unit tests for VPTree
-import assert from "assert";
+import assert from "node:assert";
 import { VPTree } from "../src/vptree.js";
 
 // Simple 2D Euclidean distance function

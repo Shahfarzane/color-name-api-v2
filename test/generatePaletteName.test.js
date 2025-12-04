@@ -1,5 +1,5 @@
 // Tests for generatePaletteName functionality
-import assert from "assert";
+import assert from "node:assert";
 import { getPaletteTitle } from "../src/generatePaletteName.js";
 
 let passed = 0;

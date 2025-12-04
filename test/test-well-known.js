@@ -64,7 +64,7 @@ async function run() {
 
 	if (errors.length) {
 		console.error("\n❌ Well-known tests failed:");
-		for (const err of errors) console.error("- " + err);
+		for (const err of errors) console.error(`- ${err}`);
 		process.exit(1);
 	}
 

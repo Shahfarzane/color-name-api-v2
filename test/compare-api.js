@@ -1,6 +1,6 @@
-import fs from "fs/promises";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { FindColors } from "../src/findColors.js";
 
 // Setup paths using ESM compatible approach
@@ -164,7 +164,7 @@ async function fetchLiveApiColor(hexColor, listType = "default") {
 		}
 
 		const data = await response.json();
-		return data.colors && data.colors.length ? data.colors[0] : null;
+		return data.colors?.length ? data.colors[0] : null;
 	} catch (err) {
 		console.error(`Error fetching from live API for color ${hexColor}:`, err);
 		return null;
@@ -216,7 +216,7 @@ function getLocalColor(findColors, hexColor, listType = "default") {
 			false,
 			validListType,
 		);
-		return result && result.length ? result[0] : null;
+		return result?.length ? result[0] : null;
 	} catch (err) {
 		console.error(
 			`Error getting color from local implementation for ${hexColor}:`,
