@@ -46,6 +46,13 @@
 		"node"
 	],
 	"author": "meodai@gmail.com",
+	"contributors": [
+		{
+			"name": "Shahin Farzane",
+			"email": "hey@nerd.ceo",
+			"url": "https://github.com/shahfarzane"
+		}
+	],
 	"license": "MIT",
 	"engines": {
 		"node": ">=20.11.0",

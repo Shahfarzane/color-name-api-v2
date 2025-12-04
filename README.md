@@ -495,3 +495,8 @@ The `distance` field in API responses represents the CIEDE2000 ΔE value:
 The API leverages the excellent [Culori](https://culorijs.org/api/) library for color space conversions and CIEDE2000 calculations, combined with a custom Vantage Point Tree (VP-tree) data structure for efficient nearest-neighbor searches across our extensive color database.
 
 This ensures both accuracy and performance when matching colors to their closest named equivalents.
+
+## Contributors
+
+- **David Aerne** ([@meodai](https://github.com/meodai)) - Creator & maintainer
+- **Shahin Farzane** ([@shahfarzane](https://github.com/shahfarzane)) - TypeScript rewrite, Hono framework migration, and backend architecture
