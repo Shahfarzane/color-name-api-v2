@@ -12,13 +12,23 @@ const PORT = parseInt(process.env.PORT || "8080", 10);
 const SOCKET_ENABLED = process.env.SOCKET === "true";
 
 /**
+ * Detect runtime environment
+ */
+function getRuntime(): string {
+	if (typeof Bun !== "undefined") {
+		return `Bun ${Bun.version}`;
+	}
+	return `Node ${process.version}`;
+}
+
+/**
  * Main startup function
  */
 async function main(): Promise<void> {
 	console.log("=".repeat(50));
 	console.log("  Color Name API - Starting...");
 	console.log("=".repeat(50));
-	console.log(`  Runtime: Bun ${Bun.version}`);
+	console.log(`  Runtime: ${getRuntime()}`);
 	console.log(`  Port: ${PORT}`);
 	console.log(`  Socket.IO: ${SOCKET_ENABLED ? "Enabled" : "Disabled"}`);
 	console.log(`  Environment: ${process.env.NODE_ENV || "development"}`);

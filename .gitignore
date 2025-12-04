@@ -33,3 +33,4 @@ next-env.d.ts
 gh-pages/.DS_Store
 gh-pages/.DS_Store
 .DS_Store
+package-lock.json

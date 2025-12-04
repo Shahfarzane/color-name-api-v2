@@ -4,10 +4,31 @@ Guide for setting up and developing the Color Name API locally.
 
 ## Prerequisites
 
-- [Bun](https://bun.sh) >= 1.0 (recommended) or Node.js >= 20.11.0
+- Node.js >= 20.11.0 **OR** [Bun](https://bun.sh) >= 1.0
 - Git
 
+> **Note:** This project supports both Node.js and Bun runtimes. Default scripts use `tsx` (Node-compatible), with `:bun` variants available for Bun users.
+
 ## Quick Start
+
+### With npm (Node.js)
+
+```bash
+# Clone the repository
+git clone https://github.com/meodai/color-name-api.git
+cd color-name-api
+
+# Install dependencies
+npm install
+
+# Copy environment template
+cp .env.example .env
+
+# Start development server with hot reload
+npm run dev
+```
+
+### With Bun
 
 ```bash
 # Clone the repository
@@ -21,7 +42,7 @@ bun install
 cp .env.example .env
 
 # Start development server with hot reload
-bun run dev
+bun run dev:bun
 ```
 
 The API will be available at `http://localhost:8080`.
@@ -30,16 +51,29 @@ The API will be available at `http://localhost:8080`.
 
 ## Development Scripts
 
+### Runtime Options
+
+| Task | Node.js (tsx) | Bun |
+|------|---------------|-----|
+| Dev server | `npm run dev` | `bun run dev:bun` |
+| Start TypeScript | `npm run start:ts` | `bun run start:bun` |
+| Run all tests | `npm run test` | `bun run test:bun` |
+
+### All Available Scripts
+
 | Command | Description |
 |---------|-------------|
-| `bun run dev` | Start dev server with hot reload |
-| `bun run start:bun` | Start production server with Bun |
-| `npm run start` | Start production server with Node.js |
-| `bun run test` | Run all tests |
-| `bun run typecheck` | TypeScript type checking |
-| `bun run lint` | Run ESLint |
-| `bun run lint:fix` | Fix linting issues |
-| `bun run format` | Format code with Prettier |
+| `npm run dev` | Start dev server with hot reload (tsx) |
+| `bun run dev:bun` | Start dev server with hot reload (Bun) |
+| `npm run start` | Start production server (Node.js, JavaScript) |
+| `npm run start:ts` | Start TypeScript server (tsx) |
+| `bun run start:bun` | Start TypeScript server (Bun) |
+| `npm run test` | Run all tests (tsx) |
+| `bun run test:bun` | Run all tests (Bun) |
+| `npm run typecheck` | TypeScript type checking |
+| `npm run lint` | Run ESLint |
+| `npm run lint:fix` | Fix linting issues |
+| `npm run format` | Format code with Prettier |
 
 ---
 
@@ -48,49 +82,47 @@ The API will be available at `http://localhost:8080`.
 ### Run All Tests
 
 ```bash
-bun run test
+# With Node.js (tsx)
+npm run test
+
+# With Bun
+bun run test:bun
 ```
 
 ### Individual Test Suites
 
-```bash
-# Core API tests
-bun run test:local
+Each test has both a Node.js and Bun variant:
 
-# VP-Tree algorithm tests
-bun run test:vptree
-
-# Palette name generation tests
-bun run test:palette-name
-
-# Compare with live API
-bun run test:compare-api
-
-# Gzip header tests
-bun run test:gzip-headers
-
-# Concurrent users simulation
-bun run test:concurrent
-
-# Live API test (against Fly.io)
-bun run test:live
-```
+| Test | Node.js (tsx) | Bun |
+|------|---------------|-----|
+| Core API | `npm run test:local` | `bun run test:local:bun` |
+| VP-Tree | `npm run test:vptree` | `bun run test:vptree:bun` |
+| Palette names | `npm run test:palette-name` | `bun run test:palette-name:bun` |
+| Compare API | `npm run test:compare-api` | `bun run test:compare-api:bun` |
+| Gzip headers | `npm run test:gzip-headers` | `bun run test:gzip-headers:bun` |
+| Concurrent users | `npm run test:concurrent` | `bun run test:concurrent:bun` |
+| Live API | `npm run test:live` | `bun run test:live:bun` |
 
 ### Writing Tests
 
-Tests are located in the `test/` directory. The project uses Bun's built-in test runner.
+Tests are located in the `test/` directory. Tests are simple TypeScript files that work with both tsx and Bun.
 
 Example test:
 ```typescript
-import { expect, test } from "bun:test";
+// test/example.test.ts
 
-test("should return color names", async () => {
-  const response = await fetch("http://localhost:8080/v1/?values=ff0000");
-  const data = await response.json();
+const response = await fetch("http://localhost:8080/v1/?values=ff0000");
+const data = await response.json();
 
-  expect(data.colors).toHaveLength(1);
-  expect(data.colors[0].name).toBeDefined();
-});
+if (data.colors.length !== 1) {
+  throw new Error("Expected 1 color");
+}
+
+if (!data.colors[0].name) {
+  throw new Error("Color name missing");
+}
+
+console.log("✅ Test passed");
 ```
 
 ---
@@ -291,18 +323,33 @@ kill -9 <PID>
 ### TypeScript Errors
 
 ```bash
-# Clear Bun cache
+# Clear cache and reinstall
 rm -rf node_modules/.cache
-bun install
+npm install  # or: bun install
 ```
 
 ### Tests Failing
 
 Make sure the dev server is running:
 ```bash
-# Terminal 1
-bun run dev
+# Terminal 1 (Node.js)
+npm run dev
 
 # Terminal 2
-bun run test:local
+npm run test:local
 ```
+
+Or with Bun:
+```bash
+# Terminal 1
+bun run dev:bun
+
+# Terminal 2
+bun run test:local:bun
+```
+
+### Runtime Detection
+
+The server auto-detects the runtime environment:
+- Running with tsx/Node: Shows `Runtime: Node vX.X.X`
+- Running with Bun: Shows `Runtime: Bun X.X.X`

@@ -129,11 +129,24 @@ This reverse functionality is particularly useful for:
 
 ## Technical Details
 
+- **Runtime**: Supports both Node.js (via tsx) and Bun – choose your preferred runtime
 - **Distance Metric**: Uses CIEDE2000 ΔE for perceptually accurate color matching
 - **Similarity Scoring**: Name search uses Levenshtein distance for fuzzy matching with typo tolerance
 - **Multiple Lists**: Choose from various color naming systems (Wikipedia, RAL, Pantone, etc.)
 - **Unique Names**: Optional `noduplicates` parameter ensures each color gets a distinct name
 - **Real-time Updates**: WebSocket support for live color naming applications
+
+### Quick Local Setup
+
+```bash
+# With npm (Node.js)
+npm install && npm run dev
+
+# With Bun
+bun install && bun run dev:bun
+```
+
+See [Development Guide](docs/DEVELOPMENT.md) for full setup instructions.
 
 ## Getting started with the REST API
 
