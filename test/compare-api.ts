@@ -13,7 +13,8 @@ const __dirname = path.dirname(__filename);
 const rootDir = path.join(__dirname, "..");
 
 // Set up test configuration
-const LIVE_API_URL = "https://api.color.pizza/v1/";
+// Using Fly.io backend (api.color.pizza is the old version)
+const LIVE_API_URL = "https://color-name-api.fly.dev/v1/";
 const TEST_COLORS = [
 	"ff0000", // Red
 	"00ff00", // Green
