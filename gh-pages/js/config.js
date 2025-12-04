@@ -4,24 +4,24 @@
  */
 
 const CONFIG = (() => {
-  const hostname = window.location.hostname;
-  const isLocal = hostname === 'localhost' || hostname === '127.0.0.1';
+	const hostname = window.location.hostname;
+	const isLocal = hostname === "localhost" || hostname === "127.0.0.1";
 
-  // Development environment
-  if (isLocal) {
-    return {
-      API_BASE_URL: 'http://localhost:8080/v1/',
-      SOCKET_URL: 'http://localhost:8080',
-      ENV: 'development',
-    };
-  }
+	// Development environment
+	if (isLocal) {
+		return {
+			API_BASE_URL: "http://localhost:8080/v1/",
+			SOCKET_URL: "http://localhost:8080",
+			ENV: "development",
+		};
+	}
 
-  // Production environment - Fly.io backend
-  return {
-    API_BASE_URL: 'https://color-name-api.fly.dev/v1/',
-    SOCKET_URL: 'https://color-name-api.fly.dev',
-    ENV: 'production',
-  };
+	// Production environment - Fly.io backend
+	return {
+		API_BASE_URL: "https://color-name-api.fly.dev/v1/",
+		SOCKET_URL: "https://color-name-api.fly.dev",
+		ENV: "production",
+	};
 })();
 
 // Export for ES modules

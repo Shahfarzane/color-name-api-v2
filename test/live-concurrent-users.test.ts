@@ -63,7 +63,15 @@ const userRequests: UserRequest[] = [
 	},
 	{
 		userId: "👤 User 5 (Brand Manager)",
-		colors: ["ff4757", "2ed573", "1e90ff", "ffa502", "a55eea", "ff6b81", "70a1ff"], // Brand colors
+		colors: [
+			"ff4757",
+			"2ed573",
+			"1e90ff",
+			"ffa502",
+			"a55eea",
+			"ff6b81",
+			"70a1ff",
+		], // Brand colors
 		list: "short",
 		noduplicates: true,
 	},
@@ -128,7 +136,9 @@ async function runLiveConcurrentTest(): Promise<void> {
 	console.log("║     🌐 LIVE CONCURRENT USERS TEST - FLY.IO BACKEND         ║");
 	console.log("╠════════════════════════════════════════════════════════════╣");
 	console.log(`║  Target: ${LIVE_API_URL}`);
-	console.log("╚════════════════════════════════════════════════════════════╝\n");
+	console.log(
+		"╚════════════════════════════════════════════════════════════╝\n",
+	);
 
 	// Check if Fly.io API is accessible
 	console.log("🔍 Checking Fly.io API availability...");
@@ -147,15 +157,23 @@ async function runLiveConcurrentTest(): Promise<void> {
 	console.log("👥 Simulating 5 concurrent users...\n");
 
 	// Show user configurations
-	console.log("┌─────────────────────────────────────────────────────────────┐");
-	console.log("│ USER CONFIGURATIONS                                         │");
-	console.log("├─────────────────────────────────────────────────────────────┤");
+	console.log(
+		"┌─────────────────────────────────────────────────────────────┐",
+	);
+	console.log(
+		"│ USER CONFIGURATIONS                                         │",
+	);
+	console.log(
+		"├─────────────────────────────────────────────────────────────┤",
+	);
 	userRequests.forEach((user) => {
 		console.log(
 			`│ ${user.userId.padEnd(25)} │ ${user.colors.length} colors │ ${user.list.padEnd(8)} │`,
 		);
 	});
-	console.log("└─────────────────────────────────────────────────────────────┘\n");
+	console.log(
+		"└─────────────────────────────────────────────────────────────┘\n",
+	);
 
 	// Run all requests concurrently
 	console.log("🚀 Sending concurrent requests to Fly.io...\n");
@@ -164,19 +182,29 @@ async function runLiveConcurrentTest(): Promise<void> {
 	const totalTime = performance.now() - startTime;
 
 	// Display detailed results
-	console.log("┌─────────────────────────────────────────────────────────────┐");
-	console.log("│ RESULTS                                                     │");
-	console.log("├─────────────────────────────────────────────────────────────┤");
+	console.log(
+		"┌─────────────────────────────────────────────────────────────┐",
+	);
+	console.log(
+		"│ RESULTS                                                     │",
+	);
+	console.log(
+		"├─────────────────────────────────────────────────────────────┤",
+	);
 
 	let allPassed = true;
 	results.forEach((result) => {
 		const status = result.success ? "✅" : "❌";
 		console.log(`│ ${status} ${result.userId}`);
 		console.log(`│    Response time: ${result.responseTime.toFixed(0)}ms`);
-		console.log(`│    Colors: ${result.returnedColors}/${result.requestedColors.length}`);
+		console.log(
+			`│    Colors: ${result.returnedColors}/${result.requestedColors.length}`,
+		);
 
 		if (result.success && result.returnedNames.length > 0) {
-			console.log(`│    Names: ${result.returnedNames.slice(0, 3).join(", ")}${result.returnedNames.length > 3 ? "..." : ""}`);
+			console.log(
+				`│    Names: ${result.returnedNames.slice(0, 3).join(", ")}${result.returnedNames.length > 3 ? "..." : ""}`,
+			);
 		}
 
 		if (result.error) {
@@ -185,15 +213,23 @@ async function runLiveConcurrentTest(): Promise<void> {
 		}
 		console.log("│");
 	});
-	console.log("└─────────────────────────────────────────────────────────────┘\n");
+	console.log(
+		"└─────────────────────────────────────────────────────────────┘\n",
+	);
 
 	// Performance summary
 	console.log("📊 PERFORMANCE METRICS");
 	console.log("───────────────────────────────────────");
 	console.log(`   Total concurrent time: ${totalTime.toFixed(0)}ms`);
-	console.log(`   Average per request:   ${(totalTime / results.length).toFixed(0)}ms`);
-	console.log(`   Fastest response:      ${Math.min(...results.map(r => r.responseTime)).toFixed(0)}ms`);
-	console.log(`   Slowest response:      ${Math.max(...results.map(r => r.responseTime)).toFixed(0)}ms`);
+	console.log(
+		`   Average per request:   ${(totalTime / results.length).toFixed(0)}ms`,
+	);
+	console.log(
+		`   Fastest response:      ${Math.min(...results.map((r) => r.responseTime)).toFixed(0)}ms`,
+	);
+	console.log(
+		`   Slowest response:      ${Math.max(...results.map((r) => r.responseTime)).toFixed(0)}ms`,
+	);
 	console.log("");
 
 	// Run additional rounds
@@ -203,9 +239,13 @@ async function runLiveConcurrentTest(): Promise<void> {
 		const roundResults = await Promise.all(userRequests.map(sendUserRequest));
 		const roundTime = performance.now() - roundStart;
 		const successCount = roundResults.filter((r) => r.success).length;
-		const avgTime = roundResults.reduce((a, b) => a + b.responseTime, 0) / roundResults.length;
+		const avgTime =
+			roundResults.reduce((a, b) => a + b.responseTime, 0) /
+			roundResults.length;
 
-		console.log(`   Round ${round}: ${successCount}/${roundResults.length} succeeded | Total: ${roundTime.toFixed(0)}ms | Avg: ${avgTime.toFixed(0)}ms`);
+		console.log(
+			`   Round ${round}: ${successCount}/${roundResults.length} succeeded | Total: ${roundTime.toFixed(0)}ms | Avg: ${avgTime.toFixed(0)}ms`,
+		);
 
 		if (successCount !== roundResults.length) {
 			allPassed = false;
@@ -213,13 +253,21 @@ async function runLiveConcurrentTest(): Promise<void> {
 	}
 
 	// Final summary
-	console.log("\n╔════════════════════════════════════════════════════════════╗");
+	console.log(
+		"\n╔════════════════════════════════════════════════════════════╗",
+	);
 	if (allPassed) {
-		console.log("║  ✅ ALL TESTS PASSED - Fly.io backend is working great!    ║");
+		console.log(
+			"║  ✅ ALL TESTS PASSED - Fly.io backend is working great!    ║",
+		);
 	} else {
-		console.log("║  ❌ SOME TESTS FAILED - Check the errors above             ║");
+		console.log(
+			"║  ❌ SOME TESTS FAILED - Check the errors above             ║",
+		);
 	}
-	console.log("╚════════════════════════════════════════════════════════════╝\n");
+	console.log(
+		"╚════════════════════════════════════════════════════════════╝\n",
+	);
 
 	process.exit(allPassed ? 0 : 1);
 }

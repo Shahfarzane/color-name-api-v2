@@ -57,7 +57,16 @@ const userRequests: UserRequest[] = [
 	},
 	{
 		userId: "user4",
-		colors: ["e6194b", "3cb44b", "ffe119", "4363d8", "f58231", "911eb4", "46f0f0", "f032e6"], // Vibrant palette
+		colors: [
+			"e6194b",
+			"3cb44b",
+			"ffe119",
+			"4363d8",
+			"f58231",
+			"911eb4",
+			"46f0f0",
+			"f032e6",
+		], // Vibrant palette
 		list: "short",
 		noduplicates: false,
 	},
@@ -145,7 +154,9 @@ async function verifyResponseIntegrity(user: UserRequest): Promise<boolean> {
 		const names = data.colors.map((c) => c.name);
 		const uniqueNames = new Set(names);
 		if (names.length !== uniqueNames.size) {
-			console.error(`  ❌ ${user.userId}: Duplicate names found when noduplicates=true`);
+			console.error(
+				`  ❌ ${user.userId}: Duplicate names found when noduplicates=true`,
+			);
 			return false;
 		}
 	}
@@ -218,7 +229,9 @@ async function runConcurrentTest(): Promise<void> {
 	const integrityResults = await Promise.all(
 		userRequests.map(async (user) => {
 			const isValid = await verifyResponseIntegrity(user);
-			console.log(`${isValid ? "✅" : "❌"} ${user.userId}: Data integrity ${isValid ? "OK" : "FAILED"}`);
+			console.log(
+				`${isValid ? "✅" : "❌"} ${user.userId}: Data integrity ${isValid ? "OK" : "FAILED"}`,
+			);
 			return isValid;
 		}),
 	);

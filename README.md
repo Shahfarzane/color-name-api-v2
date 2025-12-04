@@ -121,6 +121,12 @@ This reverse functionality is particularly useful for:
 - Accessibility features where users describe colors verbally
 - Building search-as-you-type color pickers
 
+## Documentation
+
+- [Configuration Guide](docs/CONFIGURATION.md) - Complete environment variables reference
+- [Deployment Guide](docs/DEPLOYMENT.md) - Production deployment instructions (Fly.io, Docker, VPS)
+- [Development Guide](docs/DEVELOPMENT.md) - Local development setup and testing
+
 ## Technical Details
 
 - **Distance Metric**: Uses CIEDE2000 ΔE for perceptually accurate color matching

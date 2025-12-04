@@ -11,13 +11,19 @@ import type { HydratedColor, SocketColorEvent } from "../types";
 let io: SocketServer | null = null;
 let enabled = false;
 
-// Default allowed origins
+// Default allowed origins (localhost for development, override in production!)
 const DEFAULT_ORIGINS = [
 	"http://localhost:3000",
 	"http://localhost:8080",
 	"https://color.pizza",
 	"https://gh-pages-puce.vercel.app",
 ];
+
+// Socket broadcast limit (configurable via environment)
+const SOCKET_BROADCAST_LIMIT = parseInt(
+	process.env.SOCKET_BROADCAST_LIMIT || "50",
+	10,
+);
 
 /**
  * Check if an origin matches a pattern (supports wildcards like *.vercel.app)
@@ -43,7 +49,10 @@ function originMatchesPattern(origin: string, pattern: string): boolean {
  */
 function createOriginValidator(
 	allowedOrigins: string[],
-): (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => void {
+): (
+	origin: string | undefined,
+	callback: (err: Error | null, allow?: boolean) => void,
+) => void {
 	return (origin, callback) => {
 		// Allow requests with no origin (e.g., same-origin, curl, etc.)
 		if (!origin) {
@@ -120,6 +129,17 @@ export function initSocketService(
 	console.log("[SocketService] Socket.IO initialized");
 	console.log(`[SocketService] Allowed origins: ${origins.join(", ")}`);
 
+	// Warn if using default origins in production
+	if (
+		process.env.NODE_ENV === "production" &&
+		!process.env.ALLOWED_SOCKET_ORIGINS
+	) {
+		console.warn(
+			"[SocketService] WARNING: Using default origins in production! " +
+				"Set ALLOWED_SOCKET_ORIGINS environment variable to restrict access.",
+		);
+	}
+
 	return io;
 }
 
@@ -138,7 +158,7 @@ export function broadcastColorEvent(event: SocketColorEvent): void {
 
 	const payload = {
 		paletteTitle: event.paletteTitle,
-		colors: event.colors.slice(0, 50).map((c) => ({
+		colors: event.colors.slice(0, SOCKET_BROADCAST_LIMIT).map((c) => ({
 			name: c.name,
 			hex: c.hex,
 			requestedHex: c.requestedHex || "",

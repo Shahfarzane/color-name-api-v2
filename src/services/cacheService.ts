@@ -5,14 +5,29 @@
 
 import { LRUCache } from "lru-cache";
 
-// Cache configurations
+// Cache configurations (configurable via environment variables)
 const CACHE_CONFIGS = {
-	gzip: { max: 500, name: "Gzip Cache" },
-	fullList: { max: 50, name: "Full List Cache" },
-	colorName: { max: 1000, name: "Color Name Cache" },
-	rateLimit: { max: 10000, name: "Rate Limit Cache" },
-	closest: { max: 5000, name: "Closest Color Cache" },
-} as const;
+	gzip: {
+		max: parseInt(process.env.CACHE_GZIP_SIZE || "500", 10),
+		name: "Gzip Cache",
+	},
+	fullList: {
+		max: parseInt(process.env.CACHE_FULLLIST_SIZE || "50", 10),
+		name: "Full List Cache",
+	},
+	colorName: {
+		max: parseInt(process.env.CACHE_COLORNAME_SIZE || "1000", 10),
+		name: "Color Name Cache",
+	},
+	rateLimit: {
+		max: parseInt(process.env.CACHE_RATELIMIT_SIZE || "10000", 10),
+		name: "Rate Limit Cache",
+	},
+	closest: {
+		max: parseInt(process.env.CACHE_CLOSEST_SIZE || "5000", 10),
+		name: "Closest Color Cache",
+	},
+};
 
 type CacheType = keyof typeof CACHE_CONFIGS;
 

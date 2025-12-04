@@ -75,7 +75,7 @@ app.use(
 		origin: "*",
 		allowMethods: ["GET", "OPTIONS"],
 		allowHeaders: ["Content-Type", "Authorization", "X-API-Key", "X-Referrer"],
-		maxAge: 86400, // 24 hours
+		maxAge: parseInt(process.env.CORS_MAX_AGE || "86400", 10), // Default: 24 hours
 	}),
 );
 

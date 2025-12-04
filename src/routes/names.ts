@@ -49,7 +49,17 @@ async function handleNameSearch(c: Context) {
 	const query = c.req.param("query") || c.req.query("name") || "";
 	const list = c.req.query("list") || "default";
 	const maxResultsParam = c.req.query("maxResults");
-	const maxResults = Math.min(parseInt(maxResultsParam || "20", 10), 50);
+
+	// Configurable search result limits
+	const defaultMaxResults = parseInt(
+		process.env.DEFAULT_SEARCH_RESULTS || "20",
+		10,
+	);
+	const maxResultsLimit = parseInt(process.env.MAX_SEARCH_RESULTS || "50", 10);
+	const maxResults = Math.min(
+		parseInt(maxResultsParam || String(defaultMaxResults), 10),
+		maxResultsLimit,
+	);
 
 	// Validate list
 	if (!availableLists.includes(list)) {
